@@ -1,88 +1,121 @@
 import React, { useState } from "react";
-import DoctorModal from "./DoctorModal";
+import { FaSun, FaMoon } from "react-icons/fa"; // Light/Dark mode icons
 import MigrantModal from "./MigrantModal";
+import DoctorModal from "./DoctorModal";
 
-export default function CustomNavbar() {
+const Navbar = () => {
+  const [darkMode, setDarkMode] = useState(false);
   const [showDoctorModal, setShowDoctorModal] = useState(false);
   const [showMigrantModal, setShowMigrantModal] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const [language, setLanguage] = useState("English");
 
-  // Toggle for the Doctor modal
-  const handleDoctorModalToggle = () => {
-    setShowDoctorModal(!showDoctorModal);
-    setShowDropdown(false);
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    document.documentElement.classList.toggle("dark");
   };
 
-  // Toggle for the Migrant modal
-  const handleMigrantModalToggle = () => {
-    setShowMigrantModal(!showMigrantModal);
-    setShowDropdown(false);
-  };
-
-  // Toggle for the dropdown menu itself
-  const handleDropdownToggle = () => {
-    setShowDropdown(!showDropdown);
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
+    setShowLangMenu(false);
+    // later: hook translation system here
+    console.log("Language switched to:", lang);
   };
 
   return (
-    <nav className="bg-white text-gray-900 sticky top-0 shadow-sm z-50">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        {/* Brand */}
-        <a className="font-bold text-lg flex items-center gap-2" href="#">
-          <i className="bi bi-heart-pulse-fill text-red-500 text-xl"></i>Migrant Health
-        </a>
+    <>
+      <nav className="bg-white dark:bg-gray-900 shadow-md fixed w-full z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center text-2xl font-bold text-blue-600 dark:text-blue-400">
+              e-Swasthya
+            </div>
 
-        {/* Toggler */}
-        <button
-          className="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-md"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#nav"
-          aria-controls="nav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-
-        {/* Collapse */}
-        <div className="hidden lg:flex lg:items-center" id="nav">
-          <ul className="flex items-center gap-3">
-            {/* Sign in dropdown */}
-            <li className="relative">
-              <a
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors inline-flex items-center gap-2"
-                href="#"
-                role="button"
-                onClick={handleDropdownToggle}
-                aria-expanded={showDropdown}
-              >
-                Sign in
+            {/* Navbar Links */}
+            <div className="hidden md:flex space-x-6 items-center">
+              <a href="#home" className="text-gray-800 dark:text-gray-200 hover:text-blue-500">
+                Home
               </a>
-              <ul className={`absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transition-all duration-300 ${showDropdown ? 'visible opacity-100' : 'invisible opacity-0'}`}>
-                <li>
-                  <a
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                    onClick={handleDoctorModalToggle}
-                  >
-                    Doctor / Health Worker
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                    onClick={handleMigrantModalToggle}
-                  >
-                    Migrant Worker
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
+              <a href="#about" className="text-gray-800 dark:text-gray-200 hover:text-blue-500">
+                About
+              </a>
+              <a href="#services" className="text-gray-800 dark:text-gray-200 hover:text-blue-500">
+                Services
+              </a>
+              <a href="#contact" className="text-gray-800 dark:text-gray-200 hover:text-blue-500">
+                Contact
+              </a>
+
+              {/* Doctor Sign In */}
+              <a
+                onClick={() => setShowDoctorModal(true)}
+                className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700"
+              >
+                Doctor Sign In
+              </a>
+
+              {/* Worker Sign In */}
+              <a
+                onClick={() => setShowMigrantModal(true)}
+                className="px-4 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700"
+              >
+                Patient Sign In
+              </a>
+
+              {/* Language Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowLangMenu(!showLangMenu)}
+                  className="px-3 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+                >
+                  {language} ▼
+                </button>
+                {showLangMenu && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
+                    <button
+                      onClick={() => changeLanguage("English")}
+                      className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:text-gray-200"
+                    >
+                      English
+                    </button>
+                    <button
+                      onClick={() => changeLanguage("Hindi")}
+                      className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:text-gray-200"
+                    >
+                      हिंदी
+                    </button>
+                    <button
+                      onClick={() => changeLanguage("Bengali")}
+                      className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:text-gray-200"
+                    >
+                      বাংলা
+                    </button>
+                    <button
+                      onClick={() => changeLanguage("Marathi")}
+                      className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:text-gray-200"
+                    >
+                      मराठी
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Dark/Light Toggle */}
+              <button
+                onClick={toggleDarkMode}
+                className="ml-4 text-gray-800 dark:text-gray-200 focus:outline-none"
+              >
+                {darkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <DoctorModal show={showDoctorModal} onClose={handleDoctorModalToggle} />
-      <MigrantModal show={showMigrantModal} onClose={handleMigrantModalToggle} />
-    </nav>
+      </nav>
+      <DoctorModal show={showDoctorModal} onClose={() => setShowDoctorModal(false)} />
+      <MigrantModal show={showMigrantModal} onClose={() => setShowMigrantModal(false)} />
+    </>
   );
-}
+};
+
+export default Navbar;
